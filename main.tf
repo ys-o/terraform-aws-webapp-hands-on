@@ -7,6 +7,12 @@ terraform {
       version = "~>3.0"
     }
   }
+  backend "s3" {
+    bucket  = "tastylog-dev-tfstate-bucket-9278acbe"
+    key     = "tastylog-dev.tfstate"
+    region  = "us-east-1"
+    profile = "terraform"
+  }
 }
 
 # providerブロック、利用するprofile(認証情報)とリージョンの指定
