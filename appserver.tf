@@ -10,10 +10,11 @@ resource "aws_key_pair" "keypair" {
 }
 
 resource "aws_instance" "ap_server" {
-  ami                         = data.aws_ami.app.id
+  ami                         = "ami-0a1eb068c54f44fe0"
   instance_type               = "t3.micro"
   subnet_id                   = aws_subnet.public_subnet_1a.id
   associate_public_ip_address = true
+  iam_instance_profile        = aws_iam_instance_profile.ap_ec2_profile.name
 
   vpc_security_group_ids = [
     aws_security_group.ap_sg.id,
@@ -28,4 +29,38 @@ resource "aws_instance" "ap_server" {
     Env     = var.environment
     Type    = "ap"
   }
+
+  # ami                         = data.aws_ami.app.id
+
+}
+
+#パラメータストア、DB接続情報
+resource "aws_ssm_parameter" "host" {
+  name  = "/${var.project}/${var.environment}/app/MYSQL_HOST"
+  type  = "String"
+  value = aws_db_instance.mysql-standalone-instance.address
+}
+
+resource "aws_ssm_parameter" "port" {
+  name  = "/${var.project}/${var.environment}/app/MYSQL_PORT"
+  type  = "String"
+  value = aws_db_instance.mysql-standalone-instance.port
+}
+
+resource "aws_ssm_parameter" "database" {
+  name  = "/${var.project}/${var.environment}/app/MYSQL_DATABASE"
+  type  = "String"
+  value = aws_db_instance.mysql-standalone-instance.name
+}
+
+resource "aws_ssm_parameter" "username" {
+  name  = "/${var.project}/${var.environment}/app/MYSQL_USERNAME"
+  type  = "SecureString"
+  value = aws_db_instance.mysql-standalone-instance.username
+}
+
+resource "aws_ssm_parameter" "password" {
+  name  = "/${var.project}/${var.environment}/app/MYSQL_PASSWORD"
+  type  = "SecureString"
+  value = aws_db_instance.mysql-standalone-instance.password
 }
