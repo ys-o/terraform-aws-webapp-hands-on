@@ -21,11 +21,23 @@ provider "aws" {
   region  = "us-east-1"
 }
 
+#別プロバイダーの練習
+#us_east_2リージョン用プロバイダー
+provider "aws" {
+  alias   = "useast2"
+  profile = "terraform"
+  region  = "us-east-2"
+}
+
 # variableブロック、各変数の宣言（詳細な定義は別ファイルterraform.tfvars）
 variable "project" {
   type = string
 }
 
 variable "environment" {
+  type = string
+}
+
+variable "domain" {
   type = string
 }
