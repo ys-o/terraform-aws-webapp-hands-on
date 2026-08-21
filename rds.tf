@@ -12,6 +12,11 @@ resource "aws_db_parameter_group" "mysql_standalone_parametergroup" {
     name  = "character_set_server"
     value = "utf8mb4"
   }
+
+  parameter {
+    name  = "authentication_policy"
+    value = "*:mysql_native_password"
+  }
 }
 
 # オプショングループ
